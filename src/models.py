@@ -15,26 +15,22 @@ class User(Base):
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(100), nullable=False)
    
-    favorites = relationship('Favorite', back_populates='user')
+    favorite_characters = relationship('FavoriteCharacter', back_populates='user')
+    favorite_planets = relationship('FavoritePlanet', back_populates='user')
 
-class Favorite(Base):
-    __tablename__ = 'favorite'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False)
 
-    user = relationship('User', back_populates='favorites')
-    characters = relationship('Character', secondary='favorite_characters')
-    planets = relationship('Planet', secondary='favorite_planets')
 
 class FavoriteCharacter(Base):
     __tablename__ = 'favorite_characters'
-    favorite_id = Column(Integer, ForeignKey('favorite.id'), primary_key=True)
-    character_id = Column(Integer, ForeignKey('character.character_id'))
+    
+    character_id = Column(Integer, ForeignKey('character.character_id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False)
 
 class FavoritePlanet(Base):
     __tablename__ = 'favorite_planets'
-    favorite_id = Column(Integer, ForeignKey('favorite.id'), primary_key=True)
-    planet_id = Column(Integer, ForeignKey('planet.planet_id'))
+    
+    planet_id = Column(Integer, ForeignKey('planet.planet_id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False)
 
 class Planet(Base):
     __tablename__ = 'planet'
